@@ -1,3 +1,4 @@
+// Time: 51 ms (7.58%), Space: 45.2 MB (29.41%) - LeetHub
 class Solution {
     public int[] twoSum(int[] nums, int target) {
         Map<Integer, Integer> numMap = new HashMap<>();
