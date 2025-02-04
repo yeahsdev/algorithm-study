@@ -1,20 +1,15 @@
 class Solution {
     public int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> numMap = new HashMap<>();
-        int length = nums.length;
-
-        for(int i=0;i<length;i++) {
-            numMap.put(nums[i],i);
-        }
-
-        // 키값에 해당하는 반대값 찾기
-        for(int i=0;i<length;i++){
-            int complement = target - nums[i];
-            if(numMap.containsKey(complement) && numMap.get(complement) != i){
-                return new int[]{i,numMap.get(complement)};
+        int[] numbers = new int[2];
+        for(int i =0;i<nums.length-1;i++){
+            for(int j=i+1;j<nums.length;j++){
+                if(nums[i]+nums[j] == target){
+                    numbers[0] = i;
+                    numbers[1] = j;
+                }
             }
+            
         }
-
-        return new int[]{}; // no solution found
+        return numbers;
     }
 }
