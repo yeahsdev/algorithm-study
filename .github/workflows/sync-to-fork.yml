@@ -23,7 +23,7 @@ jobs:
           cd repo-b
           git checkout main || git checkout -b main
 
-      - name: `ys/` 폴더 생성 및 파일 동기화
+      - name: ys 폴더 생성 및 파일 동기화
         run: |
           mkdir -p repo-b/ys
           rsync -av --delete algorithm-study/ repo-b/ys/
