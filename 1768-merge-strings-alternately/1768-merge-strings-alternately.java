@@ -1,4 +1,5 @@
 class Solution {
+    // O(n)
     public String mergeAlternately(String word1, String word2) {
         int word1Len = word1.length();
         int word2Len = word2.length();
