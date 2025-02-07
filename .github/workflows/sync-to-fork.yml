@@ -23,13 +23,16 @@ jobs:
           cd repo-b
           git checkout main || git checkout -b main
 
-      - name: 디버깅 - Git 상태 확인
+      - name: **서브모듈 문제 해결 (`ys` 제거)**
         run: |
           cd repo-b
-          git status
-          git diff
+          git submodule deinit -f ys || true
+          git rm -rf ys || true
+          rm -rf .git/modules/ys || true
+          git commit -m "Remove ys submodule" || echo "No changes to commit"
+          git push https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git main || echo "No changes to push"
 
-      - name: ys 폴더 생성 및 algorithm-study 코드 동기화
+      - name: `ys/` 폴더 생성 및 algorithm-study 코드 동기화
         run: |
           mkdir -p repo-b/ys
           rsync -av --delete $GITHUB_WORKSPACE/ repo-b/ys/
@@ -46,8 +49,3 @@ jobs:
           git add --all
           git commit -m "Sync algorithm-study to ys - $TODAY" --allow-empty || echo "No changes to commit"
           git push https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git main || echo "No changes to push"
-
-      - name: 디버깅 - Git 커밋 로그 확인
-        run: |
-          cd repo-b
-          git log --oneline -5
