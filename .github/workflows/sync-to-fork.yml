@@ -1,15 +1,15 @@
-name: Sync Algorithm to Forked Repo and Create PR
+name: Sync Algorithm to Forked Repo
 
 on:
   push:
     branches:
-      - main  # main 브랜치에서 푸시될 때 실행
+      - main  # algorithm-study 레포지토리에서 main 브랜치에 푸시될 때 실행
 
 jobs:
-  sync_fork_and_create_pr:
+  sync_fork:
     runs-on: ubuntu-latest
     steps:
-      - name: 내 Repo 코드 가져오기
+      - name: 내 `algorithm-study` 코드 가져오기
         uses: actions/checkout@v3
 
       - name: Git 설정 (사용자 정보 등록)
@@ -17,22 +17,26 @@ jobs:
           git config --global user.email "iyeahs71@gmail.com"
           git config --global user.name "yeahsdev"
 
-      - name: Fork한 Repo 클론 (GitHub Token 사용)
+      - name: 내 Fork한 `Daily_Leetcode_Study` 레포 클론 (GitHub Token 사용)
         run: |
           git clone https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git repo-b
           cd repo-b
           git checkout main || git checkout -b main
 
-      - name: ys 폴더 생성 및 파일 동기화
+      - name: 디버깅 - 현재 작업 디렉토리 확인
+        run: |
+          pwd
+          ls -lah $GITHUB_WORKSPACE
+
+      - name: ys 폴더 생성 및 algorithm-study 코드 동기화
         run: |
           mkdir -p repo-b/ys
-          rsync -av --delete $GITHUB_WORKSPACE repo-b/ys/
+          rsync -av --delete $GITHUB_WORKSPACE/ repo-b/ys/
 
-      - name: Fork한 Repo에 변경 사항 커밋 및 푸시
+      - name: Fork한 레포에 변경 사항 커밋 및 푸시
         run: |
           cd repo-b
           TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
           git add .
           git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
           git push https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git main || echo "No changes to push"
-
