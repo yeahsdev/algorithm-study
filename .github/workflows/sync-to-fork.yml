@@ -1,4 +1,4 @@
-name: Sync Folder to Repo B
+name: Sync Folder to Daily_Leetcode_Study
 
 on:
   push:
