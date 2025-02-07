@@ -58,6 +58,6 @@ jobs:
           git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
           git remote remove origin || true
           echo $GH_PAT
-          git remote add origin https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git
+          git remote add origin https://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@github.com/yeahsdev/Daily_Leetcode_Study.git
           git push --force origin main || echo "No changes to push"
 
