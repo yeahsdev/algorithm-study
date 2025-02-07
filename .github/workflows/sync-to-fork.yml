@@ -1,15 +1,15 @@
-name: Sync Folder to Forked Repo
+name: Sync Algorithm to Forked Repo and Create PR
 
 on:
   push:
     branches:
-      - main  # main 브랜치에서 변경이 있을 때 실행
+      - main  # main 브랜치에서 푸시될 때 실행
 
 jobs:
-  sync_fork:
+  sync_fork_and_create_pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Repo A 코드 가져오기
+      - name: 내 Repo 코드 가져오기
         uses: actions/checkout@v3
 
       - name: Git 설정 (사용자 정보 등록)
@@ -17,25 +17,30 @@ jobs:
           git config --global user.email "iyeahs71@gmail.com"
           git config --global user.name "yeahsdev"
 
-      - name: Fork한 Repo B 클론 (GitHub Token 사용)
+      - name: Fork한 Repo 클론 (GitHub Token 사용)
         run: |
-          git clone https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git repo-b  # 내 계정 Fork 레포 클론
+          git clone https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git repo-b
           cd repo-b
           git checkout main || git checkout -b main
 
-      - name: 디버깅 - 현재 Git Remote 확인
+      - name: `ys/` 폴더 생성 및 파일 동기화
         run: |
-          cd repo-b
-          git remote -v  # 현재 연결된 원격 저장소 목록 출력
+          mkdir -p repo-b/ys
+          rsync -av --delete algorithm-study/ repo-b/ys/
 
-      - name: 특정 폴더 동기화
-        run: |
-          rsync -av --delete Daily_Leetcode_Study/ repo-b/ys/
-
-      - name: Repo B에 변경 사항 커밋 및 푸시 (오늘 날짜 포함)
+      - name: Fork한 Repo에 변경 사항 커밋 및 푸시
         run: |
           cd repo-b
           TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
           git add .
-          git commit -m "Sync Daily_Leetcode_Study to ys - $TODAY" || echo "No changes to commit"
+          git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
           git push https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git main || echo "No changes to push"
+
+      - name: 자동 PR 생성 (원본 레포로)
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GH_PAT }}
+          base: main
+          branch: main
+          title: "자동 동기화 PR - ys 폴더 업데이트"
+          body: "이 PR은 algorithm-study에서 자동으로 생성되었습니다."
