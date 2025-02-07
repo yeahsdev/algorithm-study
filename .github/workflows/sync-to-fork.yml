@@ -21,7 +21,6 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          rm -rf repo-b
           git clone https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git repo-b
           cd repo-b
           git checkout main || git checkout -b main
@@ -34,8 +33,6 @@ jobs:
           # 서브모듈 문제 해결 (ys/.git 및 ys/.github 삭제)
           rm -rf repo-b/ys/.git
           rm -rf repo-b/ys/.github
-          rm -rf repo-b/.git
-          rm -rf repo-b/.github
 
       - name: 디버깅 - ys 폴더 확인
         run: |
