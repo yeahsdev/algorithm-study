@@ -27,6 +27,7 @@ jobs:
 
       - name: repo-b/ys 폴더 강제 생성 후 파일 복사 및 서브모듈 문제 해결
         run: |
+          rm -rf repo-b
           mkdir -p repo-b/ys  # 폴더 강제 생성
           rsync -av --delete $GITHUB_WORKSPACE/ repo-b/ys/  # 파일 복사
           
