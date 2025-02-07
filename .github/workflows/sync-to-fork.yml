@@ -1,0 +1,31 @@
+name: Sync Folder to Daily_Leetcode_Study
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에서 변경이 있을 때 실행
+
+jobs:
+  sync_folder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: algorithm-study 코드 가져오기
+        uses: actions/checkout@v3
+
+      - name: Daily_Leetcode_Study 클론
+        run: |
+          git config --global user.email "iyeahs71@gmail.com"
+          git config --global user.name "yeahsdev"
+
+          # Repo B 클론
+          git clone https://$GH_PAT@github.com/DailyLeetcodeStudy/Daily_Leetcode_Study.git Daily_Leetcode_Study
+          cd Daily_Leetcode_Study
+
+          # project-folder를 sub-folder로 이동
+          mkdir -p ys
+          rsync -av --delete ../algorithm-study/ ys/
+
+          # 변경 사항 푸시
+          git add .
+          git commit -m "Sync algorithm-study to ys" || echo "No changes to commit"
+          git push origin main
