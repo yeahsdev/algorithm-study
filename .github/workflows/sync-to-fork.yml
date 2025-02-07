@@ -26,7 +26,7 @@ jobs:
       - name: ys 폴더 생성 및 파일 동기화
         run: |
           mkdir -p repo-b/ys
-          rsync -av --delete algorithm-study/ repo-b/ys/
+          rsync -av --delete $GITHUB_WORKSPACE repo-b/ys/
 
       - name: Fork한 Repo에 변경 사항 커밋 및 푸시
         run: |
