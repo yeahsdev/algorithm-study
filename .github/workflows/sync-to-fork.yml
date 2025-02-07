@@ -30,8 +30,8 @@ jobs:
           pwd
           echo "ITHUB_WORKSPACE 내부 디렉토리 구조:"
           ls -lah $GITHUB_WORKSPACE/
-          mkdir -p repo-b/ys  # 폴더 강제 생성
-          rsync -av --delete $GITHUB_WORKSPACE/ repo-b/ys/  # 파일 복사
+          mkdir -p ys  # 폴더 강제 생성
+          rsync -av --delete $GITHUB_WORKSPACE/ ys/  # 파일 복사
           
           # 서브모듈 문제 해결 (ys/.git 및 ys/.github 삭제)
           rm -rf repo-b/ys/.git
