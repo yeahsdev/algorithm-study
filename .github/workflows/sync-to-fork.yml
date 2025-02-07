@@ -25,7 +25,7 @@ jobs:
           cd repo-b
           git checkout main || git checkout -b main
 
-      - name: 서브모듈 문제 해결 (`ys` 폴더를 일반 폴더로 변환)
+      - name: 서브모듈 문제 해결 (ys 폴더를 일반 폴더로 변환)
         run: |
           cd repo-b
           git submodule deinit -f ys || true  # 서브모듈 해제
@@ -41,16 +41,17 @@ jobs:
 
       - name: 디버깅 - ys 폴더 확인
         run: |
+          pwd
           echo "repo-b 내부 디렉토리 구조:"
-          ls -lah repo-b/ys
+          ls -lah repo-b
 
       - name: Fork한 레포에 변경 사항 커밋 및 푸시 (GH_PAT 인증 적용)
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           cd repo-b
-          echo "repo-b 내부 디렉토리 구조:"
-          ls -lah repo-b/ys
+          pwd
+          ls -lah repo-b
           TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
           git add ys  # ys/ 폴더 내부 파일만 추가 (서브모듈 문제 방지)
           git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
