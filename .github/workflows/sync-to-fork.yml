@@ -23,7 +23,7 @@ jobs:
 
           # project-folder를 sub-folder로 이동
           mkdir -p ys
-          rsync -av --delete ../algorithm-study/ ys/
+          rsync -av --delete ../Daily_Leetcode_Study/ ys/
 
           # 변경 사항 푸시
           git add .
