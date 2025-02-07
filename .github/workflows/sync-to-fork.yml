@@ -25,24 +25,24 @@ jobs:
           cd repo-b
           git checkout main || git checkout -b main
 
-      - name: 서브모듈 문제 해결 (ys 폴더 제거)
+      - name: 서브모듈 문제 해결 (`ys` 폴더를 일반 폴더로 변환)
         run: |
           cd repo-b
-          git submodule deinit -f ys || true
-          git rm -rf ys || true
-          rm -rf .git/modules/ys || true
+          git submodule deinit -f ys || true  # 서브모듈 해제
+          git rm -rf ys || true               # ys 폴더 삭제
+          rm -rf .git/modules/ys || true      # Git 내부 서브모듈 정보 삭제
+          mkdir -p ys                         # 새로 ys 폴더 생성
           git commit -m "Remove ys submodule" || echo "No changes to commit"
           git push origin main || echo "No changes to push"
 
-      - name: ys 폴더 생성 및 algorithm-study 코드 동기화
+      - name: ys 폴더에 algorithm-study 코드 동기화
         run: |
-          mkdir -p repo-b/ys
           rsync -av --delete $GITHUB_WORKSPACE/ repo-b/ys/
 
       - name: 디버깅 - ys 폴더 확인
         run: |
           echo "repo-b 내부 디렉토리 구조:"
-          ls -lah repo-b  # ys 폴더가 있는지 확인
+          ls -lah repo-b/ys
 
       - name: Fork한 레포에 변경 사항 커밋 및 푸시 (GH_PAT 인증 적용)
         env:
@@ -52,5 +52,6 @@ jobs:
           TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
           git add ys
           git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
-          git remote set-url origin https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git
-          git push origin main || echo "No changes to push"
+          git remote remove origin || true
+          git remote add origin https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git
+          git push --force origin main || echo "No changes to push"
