@@ -52,7 +52,7 @@ jobs:
           pwd
           cd repo-b
           echo "repo-b 내부 디렉토리 구조:"
-          ls -lah repo-b/ys
+          ls -lah ys
           TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
           git add ys  # ys/ 폴더 내부 파일만 추가 (서브모듈 문제 방지)
           git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
