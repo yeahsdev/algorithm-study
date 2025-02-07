@@ -43,15 +43,16 @@ jobs:
         run: |
           pwd
           echo "repo-b 내부 디렉토리 구조:"
-          ls -lah repo-b
+          ls -lah repo-b/ys
 
       - name: Fork한 레포에 변경 사항 커밋 및 푸시 (GH_PAT 인증 적용)
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          cd repo-b
           pwd
-          ls -lah repo-b
+          cd repo-b
+          echo "repo-b 내부 디렉토리 구조:"
+          ls -lah repo-b/ys
           TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
           git add ys  # ys/ 폴더 내부 파일만 추가 (서브모듈 문제 방지)
           git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
