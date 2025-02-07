@@ -1,12 +1,12 @@
-name: Sync Folder to Daily_Leetcode_Study
+name: Sync Folder to Forked Repo
 
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때 실행
+      - main  # main 브랜치에서 변경이 있을 때 실행
 
 jobs:
-  sync_folder:
+  sync_fork:
     runs-on: ubuntu-latest
     steps:
       - name: Repo A 코드 가져오기
@@ -14,10 +14,10 @@ jobs:
 
       - name: Git 설정 (사용자 정보 등록)
         run: |
-          git config --global user.email "iyeahs71@gmail.com"
+          git config --global user.email "iyeahs71@gmail.com"
           git config --global user.name "yeahsdev"
 
-      - name: Repo B 클론 (GitHub Token 사용)
+      - name: Fork한 Repo B 클론 (GitHub Token 사용)
         run: |
           git clone https://$GH_PAT@github.com/DailyLeetcodeStudy/Daily_Leetcode_Study.git Daily_Leetcode_Study
           cd Daily_Leetcode_Study
