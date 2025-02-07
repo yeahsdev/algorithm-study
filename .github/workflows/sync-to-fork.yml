@@ -33,6 +33,8 @@ jobs:
           # 서브모듈 문제 해결 (ys/.git 및 ys/.github 삭제)
           rm -rf repo-b/ys/.git
           rm -rf repo-b/ys/.github
+          rm -rf repo-b/.git
+          rm -rf repo-b/.github
 
       - name: 디버깅 - ys 폴더 확인
         run: |
@@ -48,6 +50,8 @@ jobs:
           cd repo-b
           echo "ys 내부 디렉토리 구조:"
           ls -lah ys
+          echo "ys/repo-b/ 내부 디렉토리 구조:"
+          ls -lah ys/repo-b/
           TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
           git add ys  # 폴더 가져오기
           git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
