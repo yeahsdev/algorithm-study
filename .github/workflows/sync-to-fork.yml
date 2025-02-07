@@ -3,7 +3,7 @@ name: Sync Folder to Repo B
 on:
   push:
     branches:
-      - main  # main 브랜치에서 변경이 있을 때 실행
+      - main  # main 브랜치에 푸시될 때 실행
 
 jobs:
   sync_folder:
@@ -14,7 +14,7 @@ jobs:
 
       - name: Git 설정 (사용자 정보 등록)
         run: |
-          git config --global user.email "iyeahs71@gmail.com"
+          git config --global user.email "iyeahs71@gmail.com"
           git config --global user.name "yeahsdev"
 
       - name: Repo B 클론 (GitHub Token 사용)
@@ -29,7 +29,7 @@ jobs:
           mkdir -p Daily_Leetcode_Study/ys
           rsync -av --delete Daily_Leetcode_Study/ Daily_Leetcode_Study/ys/
 
-      - name: Repo B에 변경 사항 커밋 및 푸시
+      - name: Repo B에 변경 사항 커밋 및 푸시 (오늘 날짜 포함)
         run: |
           cd Daily_Leetcode_Study
           TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
