@@ -1,4 +1,4 @@
-name: Sync algorithm-study to Daily_Leetcode_Study/ys
+name: "Sync algorithm-study to Daily_Leetcode_Study/ys"
 
 on:
   workflow_dispatch:  # 수동 실행 가능
@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout algorithm-study
+      - name: "Checkout algorithm-study"
         uses: actions/checkout@v4
         with:
           repository: yeahsdev/algorithm-study  # ✅ algorithm-study 레포지토리 가져오기
           ref: main
           token: ${{ secrets.GH_PAT }}
 
-      - name: Clone Daily_Leetcode_Study repository
+      - name: "Clone Daily_Leetcode_Study repository"
         run: |
           git clone https://github.com/yeahsdev/Daily_Leetcode_Study.git repo2
           cd repo2
@@ -29,7 +29,7 @@ jobs:
           git checkout main || git checkout -b main
           cd ..
 
-      - name: Sync algorithm-study to ys folder in Daily_Leetcode_Study
+      - name: "Sync algorithm-study to ys folder in Daily_Leetcode_Study"
         run: |
           rsync -av --delete . repo2/ys/  # ✅ algorithm-study 전체 내용을 Daily_Leetcode_Study/ys/에 동기화
 
