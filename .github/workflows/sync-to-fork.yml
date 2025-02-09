@@ -1,62 +1,41 @@
-name: Sync Algorithm to Forked Repo
+name: Sync ys from algorithm-study to Daily_Leetcode_Study
 
 on:
   push:
     branches:
-      - main  # algorithm-study 레포지토리에서 main 브랜치에 푸시될 때 실행
-
+      - main # algorithm-study의 main 브랜치가 변경될 때 실행
 jobs:
-  sync_fork:
+  sync-folder:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 내 algorithm-study 코드 가져오기
-        uses: actions/checkout@v3
+      - name: Checkout algorithm-study
+        uses: actions/checkout@v4
+        with:
+          repository: yeahsdev/algorithm-study
+          ref: main
+          token: ${{ secrets.GH_PAT }} # 개인 액세스 토큰 필요
 
-      - name: Git 설정 (사용자 정보 등록)
+      - name: Copy ys to Daily_Leetcode_Study
         run: |
-          git config --global user.email "iyeahs71@gmail.com"
-          git config --global user.name "yeahsdev"
+          mkdir Daily_Leetcode_Study
+          cd Daily_Leetcode_Study
+          git init
+          git remote add origin https://github.com/yeahsdev/Daily_Leetcode_Study.git
+          git fetch origin main
+          git checkout -b main origin/main
 
-      - name: 내 Fork한 Daily_Leetcode_Study 레포 클론 (GitHub Token 사용)
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          git clone https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git repo-b
-          cd repo-b
-          git checkout main || git checkout -b main
+          # algorithm-study의 특정 폴더 복사
+          cd ..
+          rsync -av --delete path/to/folder/in/algorithm-study/ Daily_Leetcode_Study/ys/
 
-      - name: repo-b/ys 폴더 강제 생성 후 파일 복사 및 서브모듈 문제 해결
-        run: |
-          pwd
-          echo "ITHUB_WORKSPACE 내부 디렉토리 구조:"
-          ls -lah $GITHUB_WORKSPACE/
-          mkdir -p ys  # 폴더 강제 생성
-          rsync -av --delete $GITHUB_WORKSPACE/ ys/  # 파일 복사
-          
-          # 서브모듈 문제 해결 (ys/.git 및 ys/.github 삭제)
-          rm -rf repo-b/ys/.git
-          rm -rf repo-b/ys/.github
+          cd Daily_Leetcode_Study
+          git add .
+          git commit -m "Sync specific folder from Repo1" || echo "No changes to commit"
+          git push origin main
 
-      - name: 디버깅 - ys 폴더 확인
-        run: |
-          pwd
-          echo "repo-b/ 내부 디렉토리 구조:"
-          ls -lah repo-b/
-
-      - name: Fork한 레포에 변경 사항 커밋 및 푸시 (GH_PAT 인증 적용)
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          pwd
-          cd repo-b
-          echo "ys 내부 디렉토리 구조:"
-          ls -lah ys
-          echo "ys/repo-b/ 내부 디렉토리 구조:"
-          ls -lah ys/repo-b/
-          TODAY=$(date "+%Y-%m-%d")  # 오늘 날짜 가져오기
-          git add ys  # 폴더 가져오기
-          git commit -m "Sync algorithm-study to ys - $TODAY" || echo "No changes to commit"
-          git remote remove origin || true
-          git remote add origin https://$GH_PAT@github.com/yeahsdev/Daily_Leetcode_Study.git
-          git push --force origin main || echo "No changes to push"
-
+    env:
+      GIT_AUTHOR_NAME: yeahsdev
+      GIT_AUTHOR_EMAIL: yeahsdev@github.com
+      GIT_COMMITTER_NAME: yeahsdev
+      GIT_COMMITTER_EMAIL: yeahsdev@github.com
