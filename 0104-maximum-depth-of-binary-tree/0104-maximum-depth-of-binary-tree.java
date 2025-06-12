@@ -23,6 +23,7 @@ class Solution {
         /**
         현재 레벨 노드 갯수 만큼 돌면서 left right 체크
         left right 있으면 해당 노드 큐에 추가
+        depth count
          */
 
         // BFS를 위한 큐(Queue) 선언
